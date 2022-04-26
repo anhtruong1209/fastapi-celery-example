@@ -18,7 +18,6 @@ And monitor the execution of celery tasks by flower through http://localhost:555
 3. Start a Celery worker:
     - on Linux OS:
     `celery -A celery_app worker --loglevel=info`
-    - on windows OS:
-    `celery -A celery_app worker --pool=solo --loglevel=info`
-4. Start Celery Flower to monitor. `celery -A main.celery_app flower`
-5. Start the Fastapi web server. `poetry run python main.py`
+    run in background: `celery -A celery_app worker --loglevel=info --detach`
+4. Start Celery Flower to monitor. `flower --port=5555 --broker=redis://localhost:6379/0`
+5. Start the Fastapi web server. `screen python main.py`

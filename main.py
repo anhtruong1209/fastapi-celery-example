@@ -5,8 +5,9 @@ import uvicorn
 from fastapi import FastAPI, Request, Response
 from fastapi.responses import HTMLResponse
 
-from celery_app.tasks import long_task
+import pandas
 
+from celery_app.tasks import long_task, long_task_2
 app = FastAPI()
 
 
@@ -23,6 +24,15 @@ def longtask(request: Request, response: Response):
     response.headers["location"] = request.url_for(
         "taskstatus", **{"task_id": task.id})
     return {}
+
+@app.post("/longtask2", status_code=202)
+def longtask(request: Request, response: Response):
+    """Accept long running task."""
+    task = long_task_2.apply_async()
+    response.headers["location"] = request.url_for(
+        "taskstatus", **{"task_id": task.id})
+    return {}
+
 
 
 @app.get("/status/{task_id}")
